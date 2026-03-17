@@ -3,11 +3,13 @@ import Header from './components/Header';
 import SolarComparison from './components/SolarComparison';
 import WindArcMeter from './components/WindArcMeter';
 import SpeedDisplayBox from './components/SpeedDisplayBox';
-
 import ControlPanel from './components/ControlPanel';
+import WeatherModal from './components/WeatherModal';
 
 function App() {
-    const [windSpeed, setWindSpeed] = useState(40);
+    const [windSpeed, setWindSpeed] = useState(0);
+    const [locationName, setLocationName] = useState('');
+    const [resetKey, setResetKey] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
@@ -23,8 +25,17 @@ function App() {
         setWindSpeed(newSpeed);
     };
 
+    const handleWeatherSuccess = (newSpeed, location) => {
+        setWindSpeed(newSpeed);
+        if (location) {
+            setLocationName(location);
+        }
+    };
+
     const handleReset = () => {
-        setWindSpeed(40);
+        setWindSpeed(0);
+        setLocationName('');
+        setResetKey(prev => prev + 1);
     };
 
     const handleFullScreenToggle = () => {
@@ -40,8 +51,7 @@ function App() {
     };
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-slate-900 to-blue-950 text-white font-sans selection:bg-blue-500/30">
-
+        <div key={resetKey} className="fixed inset-0 w-screen h-[100dvh] overflow-hidden bg-gradient-to-b from-slate-900 to-blue-950 text-white font-sans selection:bg-blue-500/30">
             {/* Background Particles Placeholder - could be a separate component */}
             <div className="absolute inset-0 z-0 opacity-30 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-50 contrast-150">
                 {/* Simple noise texture overlay for now */}
@@ -51,24 +61,24 @@ function App() {
             <div className="relative z-10 w-full h-full flex flex-col">
 
                 {/* Header Section */}
-                <header className="flex-none h-32 w-full z-50">
-                    <Header />
+                <header className="flex-none h-24 md:h-32 w-full z-50">
+                    <Header>
+                        <WeatherModal onSuccess={handleWeatherSuccess} />
+                        <ControlPanel onReset={handleReset} onFullScreen={handleFullScreenToggle} isFullscreen={isFullscreen} />
+                    </Header>
                 </header>
 
-                {/* Side Control Panel */}
-                <div className="absolute top-32 right-8 z-50">
-                    <ControlPanel onReset={handleReset} onFullScreen={handleFullScreenToggle} isFullscreen={isFullscreen} />
-                </div>
-
                 {/* Main Comparison Section - Grows to fill available space */}
-                <main className="flex-grow flex w-full relative z-0">
+                <main className="flex-grow w-full relative z-0 overflow-hidden">
                     <SolarComparison windSpeed={windSpeed} />
                 </main>
 
-                {/* Bottom Wind Meter Section */}
-                <footer className="flex-none h-[160px] w-full absolute bottom-0 left-0 z-40">
-                    <WindArcMeter speed={windSpeed} onSpeedChange={handleWindSpeedChange} />
-                    <SpeedDisplayBox speed={Math.round(windSpeed)} />
+                {/* Bottom Wind Meter Section - Overlay at the bottom */}
+                <footer className="absolute bottom-0 h-[140px] md:h-[180px] w-full z-40 pointer-events-none">
+                    <div className="w-full h-full relative pointer-events-auto">
+                        <WindArcMeter speed={windSpeed} onSpeedChange={handleWindSpeedChange} />
+                        <SpeedDisplayBox speed={Math.round(windSpeed)} location={locationName} />
+                    </div>
                 </footer>
 
             </div>

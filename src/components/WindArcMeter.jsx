@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 const WindArcMeter = ({ speed, onSpeedChange }) => {
     // Config
-    const minSpeed = 40;
+    const minSpeed = 0;
     const maxSpeed = 180;
 
     // Design: 
@@ -15,41 +15,28 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
 
     // SVG Dimension
     const svgWidth = 1920;
-    const svgHeight = 160;
+    const svgHeight = 180; // Natively matched to new footer height
 
     // Design Parameters
-    // Curve height in center: how much higher is the center than the sides?
-    // Let's say sides are 80px high, center is 140px high.
-    // We need a path: M 0 160 L 0 [sideHeight] Q 960 [centerHeight * 2 - sideHeight?] 1920 [sideHeight] L 1920 160 Z
-    // Or just a large circle segment again but visible as a filled shape.
-
-    // Let's use a Quadratic Bezier for the top curve.
-    const sideY = 80; // Y coordinate from top of SVG (0 is top)
-    const centerY = 20; // Y coordinate of the peak
-    // Q Control point needs to be higher to pull the curve up to centerY.
-    // For a Q curve starting at (0, 80) and ending at (1920, 80) to peak at 20:
-    // Ty = (1-t)^2 * P0y + 2(1-t)t * P1y + t^2 * P2y
-    // At t=0.5: 0.25*80 + 0.5*P1y + 0.25*80 = 20
-    // 20 + 0.5*P1y + 20 = 20
-    // 40 + 0.5*P1y = 20
-    // 0.5*P1y = -20
-    // P1y = -40
-
-    const curvePath = `M 0 160 L 0 ${sideY} Q 960 -40 1920 ${sideY} L 1920 160 Z`;
+    const sideY = 100;
+    
+    // curve path: M P0x P0y C P1x P1y, P2x P2y, P3x P3y
+    // Peak at 10 (t=0.5)
+    const curvePath = `M 0 180 L 0 ${sideY} C 640 -20, 1280 -20, 1920 ${sideY} L 1920 180 Z`;
 
     // Track Path (slightly inset from the top edge)
-    // We can't easily offset a Q curve perfectly parallel without math, but for this shallow curve, moving Y down works.
     const trackOffsetY = 30;
     const trackSideY = sideY + trackOffsetY;
-    const trackControlY = -40 + trackOffsetY;
+    const trackPeakY = 10 + trackOffsetY;
+    // Cubic control points for track (P1y and P2y adjusted to hit peak)
+    // 0.125*130 + 0.75*P1y + 0.125*130 = 40 => 16.25 + 0.75*P1y + 16.25 = 40 => 32.5 + 0.75*P1y = 40 => 0.75P1y = 7.5 => P1y=10
+    const trackControlY = 10; 
 
-    const trackPath = `M 100 ${trackSideY} Q 960 ${trackControlY} 1820 ${trackSideY}`;
-
-    // Mapping speed to position on the curve
-    // We will map speed linearly to X position (100 to 1820)
-    // Then calculate Y based on the Q curve formula
+    // minX and maxX for track
     const minX = 100;
     const maxX = 1820;
+
+    const trackPath = `M ${minX} ${trackSideY} C 640 ${trackControlY} 1280 ${trackControlY} ${maxX} ${trackSideY}`;
 
     const mapSpeedToX = (s) => {
         const percent = (s - minSpeed) / (maxSpeed - minSpeed);
@@ -63,16 +50,13 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
     };
 
     const getYForX = (x) => {
-        // Inverse solve for t in quadratic bezier x component?
-        // x(t) = (1-t)^2 * x0 + 2(1-t)t * x1 + t^2 * x2
-        // Here x0=100, x1=960, x2=1820.
-        // It's linear logic for t if x1 is exactly mid (it is).
-        // So t = (x - x0) / (x2 - x0)
         const t = (x - minX) / (maxX - minX);
-
-        // y(t) = (1-t)^2 * y0 + 2(1-t)t * y1 + t^2 * y2
-        // y0 = trackSideY, y1 = trackControlY, y2 = trackSideY
-        return (1 - t) * (1 - t) * trackSideY + 2 * (1 - t) * t * trackControlY + t * t * trackSideY;
+        const invT = (1 - t);
+        // Cubic Bezier: (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t) * t^2 * P2 + t^3 * P3
+        return invT * invT * invT * trackSideY + 
+               3 * invT * invT * t * trackControlY + 
+               3 * invT * t * t * trackControlY + 
+               t * t * t * trackSideY;
     };
 
     const currentX = mapSpeedToX(speed);
@@ -125,9 +109,8 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
         const tx = mapSpeedToX(i);
         const ty = getYForX(tx);
 
-        // Normal vector approximation (Up/Down)
-        // Since curve is flat, just vertical ticks are fine
-        const tickLen = isMajor ? 15 : 8;
+        // Make ticks longer for kiosk visibility
+        const tickLen = isMajor ? 20 : 10;
 
         ticks.push({
             value: i,
@@ -147,8 +130,8 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
             <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} preserveAspectRatio="none" className="w-full h-full overflow-visible drop-shadow-2xl">
                 <defs>
                     <linearGradient id="footerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#7f1d1d" stopOpacity="0.95" /> {/* Dark Red */}
-                        <stop offset="100%" stopColor="#450a0a" stopOpacity="0.98" /> {/* Darkest Maroon */}
+                        <stop offset="0%" stopColor="#dc2626" stopOpacity="0.95" /> {/* Vibrant Red */}
+                        <stop offset="100%" stopColor="#991b1b" stopOpacity="0.98" /> {/* Deep Red */}
                     </linearGradient>
                     <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="#ef4444" stopOpacity="0.2" />
@@ -156,7 +139,7 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
                         <stop offset="100%" stopColor="#ef4444" stopOpacity="0.2" />
                     </linearGradient>
                     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                        <feGaussianBlur stdDeviation="5" result="coloredBlur" />
                         <feMerge>
                             <feMergeNode in="coloredBlur" />
                             <feMergeNode in="SourceGraphic" />
@@ -169,7 +152,7 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
                     d={curvePath}
                     fill="url(#footerGradient)"
                     stroke="rgba(255,255,255,0.15)"
-                    strokeWidth="1"
+                    strokeWidth="2"
                     className="backdrop-blur-md"
                 />
 
@@ -178,23 +161,16 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
                     d={trackPath}
                     fill="none"
                     stroke="rgba(255,100,100,0.15)"
-                    strokeWidth="6"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     filter="url(#glow)"
                 />
-
-                {/* Active Track Segment (Masked or partial? Logic is complex for Q curves) */}
-                {/* Simpler: just draw line from start to current? No, it needs to follow curve. */}
-                {/* We can reproduce the Q curve command but change the end point? No, Bezier doesn't work that way linearly. */}
-                {/* For visual simplicity, let's just use the track gradient on the full track for now, 
-                or overlay a second path if needed. 
-                Let's stick to a glowing full track for "available range" and a thumb that moves. */}
 
                 <path
                     d={trackPath}
                     fill="none"
                     stroke="url(#trackGradient)"
-                    strokeWidth="2"
+                    strokeWidth="6"
                     strokeLinecap="round"
                     filter="url(#glow)"
                     opacity="0.6"
@@ -206,18 +182,18 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
                         <line
                             x1={tick.x} y1={tick.y}
                             x2={tick.x} y2={tick.y2}
-                            stroke={tick.isMajor ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.3)"}
-                            strokeWidth={tick.isMajor ? 2 : 1}
+                            stroke={tick.isMajor ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)"}
+                            strokeWidth={tick.isMajor ? 4 : 2}
                         />
                         {tick.isMajor && (
                             <text
                                 x={tick.x}
-                                y={tick.y2 + 20}
+                                y={tick.y2 + 30}
                                 textAnchor="middle"
                                 fill="white"
-                                fontSize="14"
-                                fontWeight="500"
-                                className="font-sans opacity-80"
+                                fontSize="24"
+                                fontWeight="700"
+                                className="font-sans opacity-90"
                             >
                                 {tick.value}
                             </text>
@@ -231,15 +207,15 @@ const WindArcMeter = ({ speed, onSpeedChange }) => {
                     className="transition-transform duration-75 ease-out"
                     style={{ pointerEvents: 'none' }}
                 >
-                    <circle r="20" fill="#dc2626" opacity="0.4" filter="url(#glow)" />
-                    <circle r="14" fill="white" className="shadow-lg" />
-                    <circle r="18" fill="none" stroke="#dc2626" strokeWidth="2" opacity="0.5" />
+                    <circle r="40" fill="#dc2626" opacity="0.4" filter="url(#glow)" />
+                    <circle r="26" fill="white" className="shadow-2xl" />
+                    <circle r="34" fill="none" stroke="#dc2626" strokeWidth="4" opacity="0.7" />
                 </g>
 
             </svg>
 
             {/* Helper Text */}
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-white/30 text-[10px] tracking-widest pointer-events-none uppercase">
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white/40 text-sm md:text-xl tracking-[0.3em] pointer-events-none uppercase font-bold">
                 Drag to Control Wind
             </div>
         </div>

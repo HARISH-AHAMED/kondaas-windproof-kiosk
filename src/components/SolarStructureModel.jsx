@@ -1,18 +1,51 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, PerspectiveCamera, ContactShadows } from '@react-three/drei';
 
-const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, cellColor = "#051025" }) => {
+// A component to dynamically adjust camera FOV based on aspect ratio
+// This prevents the 3D model from zooming incorrectly in wide/fullscreen Kiosk displays
+const ResponsiveCamera = () => {
+    const { camera, size } = useThree();
+
+    useEffect(() => {
+        // Calculate aspect ratio
+        const aspect = size.width / size.height;
+
+        // Base FOV for standard aspect ratios
+        let fov = 45;
+
+        // If the screen is narrow (e.g. 16:9 fullscreen on half width -> 8:9 -> aspect 0.88)
+        // Set a much more aggressive FOV adjustment so it never clips horizontally
+        if (aspect < 1.2) {
+            // Push FOV wider to squeeze the model into narrow columns
+            fov = 45 * (1.2 / aspect);
+        }
+
+        // Cap FOV to avoid extreme distortion, then update
+        camera.fov = Math.min(85, Math.max(35, fov));
+        camera.updateProjectionMatrix();
+
+    }, [size, camera]);
+
+    // Pulled the camera position back slightly more from z:5.5 to z:6.5 to give breathing room
+    return <PerspectiveCamera makeDefault position={[0, 1.5, 6.5]} fov={45} />;
+};
+
+export const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, cellColor = "#051025" }) => {
     const upperStructureRef = useRef();
 
     useFrame((state) => {
-        if (upperStructureRef.current && vibrationIntensity > 0) {
-            // Complex vibration: visual shaking (Panel only)
-            const time = state.clock.getElapsedTime();
-            const shake = vibrationIntensity * 0.0005;
-            upperStructureRef.current.rotation.z = Math.sin(time * 40) * (shake * 0.5);
-            upperStructureRef.current.rotation.x = Math.sin(time * 55) * (shake * 0.2); // slight twist
-            // upperStructureRef.current.position.x = Math.sin(time * 30) * shake; // Keep position mostly stable relative to legs
+        if (upperStructureRef.current) {
+            if (vibrationIntensity > 0) {
+                // Complex vibration: visual shaking (Panel only)
+                const time = state.clock.getElapsedTime();
+                const shake = vibrationIntensity * 0.0005;
+                upperStructureRef.current.rotation.z = Math.sin(time * 40) * (shake * 0.5);
+                upperStructureRef.current.rotation.x = Math.sin(time * 55) * (shake * 0.2); // slight twist
+            } else {
+                // Reset to pristine state when wind is 0
+                upperStructureRef.current.rotation.set(0, 0, 0);
+            }
         }
     });
 
@@ -49,8 +82,50 @@ const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, 
         }
 
         // Random-ish swing angle for detached legs
-        const frontRot = isFrontDetached ? [0.4, 0, (index - 1) * 0.2] : [0, 0, 0];
-        const backRot = isBackDetached ? [-0.4, 0, (index - 1) * 0.2] : [0, 0, 0];
+        const targetFrontRot = isFrontDetached ? [0.4, 0, (index - 1) * 0.2] : [0, 0, 0];
+        const targetBackRot = isBackDetached ? [-0.4, 0, (index - 1) * 0.2] : [0, 0, 0];
+
+        const frontLegRef = useRef();
+        const backLegRef = useRef();
+
+        useFrame((state, delta) => {
+            if (windSpeed === 0) {
+                // Force an explicit hard-reset of the object rotation when wind drops to 0
+                // This bypasses any lerp desyncs caused by the parent CSS opacity transitions
+                if (frontLegRef.current) frontLegRef.current.rotation.set(0, 0, 0);
+                if (backLegRef.current) backLegRef.current.rotation.set(0, 0, 0);
+                return;
+            }
+
+            // Add vibration to the legs based on vibrationIntensity 
+            // even before they detach, creating physical tension visible in the scope.
+            const time = state.clock.getElapsedTime();
+            // Scale shake based on component. Kondaas structures shake much less natively.
+            const shakeBase = vibrationIntensity * 0.0003;
+            const shakeX = Math.sin(time * 60 + index) * shakeBase;
+            const shakeZ = Math.cos(time * 50 + index) * shakeBase;
+
+            const targetFrontX = targetFrontRot[0] + (isFrontDetached ? 0 : shakeX);
+            const targetFrontZ = targetFrontRot[2] + (isFrontDetached ? 0 : shakeZ);
+
+            const targetBackX = targetBackRot[0] + (isBackDetached ? 0 : shakeX);
+            const targetBackZ = targetBackRot[2] + (isBackDetached ? 0 : shakeZ);
+
+            // Smoothly interpolate current rotation to target rotation
+            const lerpFactor = 10 * delta; // Adjust speed of snap-back
+
+            if (frontLegRef.current) {
+                frontLegRef.current.rotation.x += (targetFrontX - frontLegRef.current.rotation.x) * lerpFactor;
+                frontLegRef.current.rotation.y += (targetFrontRot[1] - frontLegRef.current.rotation.y) * lerpFactor;
+                frontLegRef.current.rotation.z += (targetFrontZ - frontLegRef.current.rotation.z) * lerpFactor;
+            }
+
+            if (backLegRef.current) {
+                backLegRef.current.rotation.x += (targetBackX - backLegRef.current.rotation.x) * lerpFactor;
+                backLegRef.current.rotation.y += (targetBackRot[1] - backLegRef.current.rotation.y) * lerpFactor;
+                backLegRef.current.rotation.z += (targetBackZ - backLegRef.current.rotation.z) * lerpFactor;
+            }
+        });
 
         return (
             <group position={[xOffset, 0, 0]}>
@@ -62,7 +137,7 @@ const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, 
                         <meshStandardMaterial color="#999" roughness={0.9} />
                     </mesh>
                     {/* Leg (Pivots from Top) */}
-                    <group position={[0, frontLegHeight, 1]} rotation={frontRot}>
+                    <group ref={frontLegRef} position={[0, frontLegHeight, 1]}>
                         <mesh position={[0, -frontLegHeight / 2, 0]}>
                             <cylinderGeometry args={[legRadius, legRadius, frontLegHeight, 16]} />
                             <meshStandardMaterial color={legColor} metalness={0.6} roughness={0.4} />
@@ -78,7 +153,7 @@ const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, 
                         <meshStandardMaterial color="#999" roughness={0.9} />
                     </mesh>
                     {/* Leg (Pivots from Top) */}
-                    <group position={[0, backLegHeight, -1]} rotation={backRot}>
+                    <group ref={backLegRef} position={[0, backLegHeight, -1]}>
                         <mesh position={[0, -backLegHeight / 2, 0]}>
                             <cylinderGeometry args={[legRadius, legRadius, backLegHeight, 16]} />
                             <meshStandardMaterial color={legColor} metalness={0.6} roughness={0.4} />
@@ -170,10 +245,10 @@ const SolarFrame = ({ vibrationIntensity = 0, isKondaas = false, windSpeed = 0, 
 
 const SolarStructureModel = ({ vibration = 0, isKondaas = false, windSpeed = 0, cellColor }) => {
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full relative">
             <Canvas>
-                {/* Lower camera angle for more dramatic look */}
-                <PerspectiveCamera makeDefault position={[0, 1.5, 5]} fov={45} />
+                {/* Dynamic Camera that locks field of view to container boundary */}
+                <ResponsiveCamera />
                 <ambientLight intensity={0.5} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
                 <pointLight position={[-10, -10, -10]} intensity={1} />

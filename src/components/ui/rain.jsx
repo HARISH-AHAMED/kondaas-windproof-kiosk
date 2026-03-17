@@ -128,7 +128,7 @@ export function RainBackground({
       const userSpeedMultiplier = intensity;
 
       // Check lightning
-      if (lightning && Date.now() > nextLightning) {
+      if (lightning && storminess > 0 && Date.now() > nextLightning) {
         triggerLightning(storminess)
       }
 
@@ -237,7 +237,13 @@ export function RainBackground({
         }
       `}</style>
 
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <canvas 
+        ref={canvasRef} 
+        className={cn(
+            "absolute inset-0 h-full w-full transition-opacity duration-1000",
+            configRef.current.storminess <= 0 ? "opacity-0" : "opacity-100"
+        )} 
+      />
       {/* Lightning flash overlay */}
       {lightning && (
         <div
