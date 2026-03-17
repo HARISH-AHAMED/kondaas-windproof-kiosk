@@ -182,17 +182,16 @@ const WeatherModal = ({ onSuccess }) => {
                         </h2>
 
                         <div className="w-full flex flex-col items-center">
-                        <div className="w-full h-[520px]">
                             {mode === 'district' ? (
                                 /* District Mode Selection UI */
-                                <div className="w-full h-full flex flex-col justify-center space-y-6 py-2">
+                                <div className="w-full space-y-6 mb-8 mt-2">
                                     <div className="space-y-2">
                                         <label className="text-white/50 text-xl font-bold uppercase tracking-widest ml-1">Select State</label>
                                         <div className="relative">
                                             <select
                                                 value={selectedState}
                                                 onChange={handleStateChange}
-                                                className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                                className="w-full h-20 bg-black/50 border-4 border-white/20 rounded-2xl px-6 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
                                             >
                                                 {Object.keys(STATES).map(state => (
                                                     <option key={state} value={state} className="bg-slate-900">{state}</option>
@@ -210,7 +209,7 @@ const WeatherModal = ({ onSuccess }) => {
                                             <select
                                                 value={selectedDistrict}
                                                 onChange={handleDistrictChange}
-                                                className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                                className="w-full h-20 bg-black/50 border-4 border-white/20 rounded-2xl px-6 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
                                             >
                                                 {STATES[selectedState].map(district => (
                                                     <option key={district} value={district} className="bg-slate-900">{district}</option>
@@ -226,19 +225,22 @@ const WeatherModal = ({ onSuccess }) => {
                                     <button
                                         onClick={handleSubmit}
                                         disabled={loading}
-                                        className="w-full h-24 md:h-28 text-4xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-4"
+                                        className="w-full h-24 md:h-28 text-4xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-8"
                                     >
                                         {loading ? <Loader2 size={48} className="animate-spin" /> : 'FETCH WEATHER'}
                                     </button>
                                 </div>
                             ) : (
                                 /* Pincode Mode Selection UI */
-                                <div className="w-full h-full flex flex-col justify-start">
-                                    {/* Read-only Display Box */}
-                                    <div
-                                        className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-center text-4xl font-mono text-white tracking-[0.25em] mb-4 min-h-[70px] flex items-center justify-center overflow-hidden"
-                                    >
-                                        {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
+                                <>
+                                    <div className="space-y-2 mb-6 w-full">
+                                        <label className="text-white/50 text-xl font-bold uppercase tracking-widest ml-1">Enter Pincode</label>
+                                        {/* Read-only Display Box */}
+                                        <div
+                                            className="w-full h-20 bg-black/50 border-4 border-white/20 rounded-2xl px-6 text-center text-4xl font-mono text-white tracking-[0.25em] flex items-center justify-center overflow-hidden"
+                                        >
+                                            {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
+                                        </div>
                                     </div>
 
                                     <div className="h-8 mb-4 w-full text-center">
@@ -248,7 +250,7 @@ const WeatherModal = ({ onSuccess }) => {
                                     </div>
 
                                     {/* On-Screen Numeric Keypad */}
-                                    <div className="grid grid-cols-3 gap-3 w-full max-w-md mx-auto mb-2">
+                                    <div className="grid grid-cols-3 gap-3 w-full max-w-md mx-auto mb-6">
                                         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                                             <button
                                                 key={num}
@@ -289,9 +291,8 @@ const WeatherModal = ({ onSuccess }) => {
                                             {loading ? <Loader2 size={32} className="animate-spin" /> : '✔'}
                                         </button>
                                     </div>
-                                </div>
+                                </>
                             )}
-                        </div>
 
                             {/* Mode Selection Tab - BELOW SUBMIT */}
                             <div className="w-full flex bg-black/40 rounded-2xl p-2 mb-4 border-2 border-white/5">
