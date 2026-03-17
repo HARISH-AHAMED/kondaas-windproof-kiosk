@@ -292,7 +292,7 @@ const WeatherModal = ({ onSuccess }) => {
                             )}
 
                             {/* Mode Selection Tab - BELOW SUBMIT */}
-                            <div className="w-full flex bg-black/40 rounded-2xl p-2 mb-8 border-2 border-white/5">
+                            <div className="w-full flex bg-black/40 rounded-2xl p-2 mb-4 border-2 border-white/5">
                                 <button
                                     onClick={() => { setMode('district'); setError(''); }}
                                     className={`flex-1 py-4 text-xl font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
@@ -307,7 +307,7 @@ const WeatherModal = ({ onSuccess }) => {
                                 </button>
                             </div>
 
-                            <div className="h-4 mb-2 min-h-[24px]">
+                            <div className="h-4 mb-0 min-h-[24px]">
                                 {mode === 'district' && error && (
                                     <p className="text-red-400 text-2xl font-medium animate-in fade-in">{error}</p>
                                 )}
