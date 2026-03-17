@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import { CloudRain, X, Loader2 } from 'lucide-react';
 
+const STATES = {
+    'Tamil Nadu': [
+        'Chennai', 'Coimbatore', 'Madurai', 'Trichy', 'Salem', 'Tirunelveli', 'Vellore', 'Erode',
+        'Thoothukudi', 'Tiruppur', 'Kanchipuram', 'Nagercoil', 'Thanjavur', 'Dindigul',
+        'Vellore', 'Cuddalore', 'Kumbakonam', 'Nagapattinam', 'Pudukkottai', 'Hosur'
+    ],
+    'Kerala': [
+        'Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Malappuram', 'Palakkad',
+        'Alappuzha', 'Kollam', 'Kannur', 'Kasaragod', 'Idukki', 'Kottayam', 'Pathanamthitta', 'Wayanad'
+    ]
+};
+
 const WeatherModal = ({ onSuccess }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [mode, setMode] = useState('district'); // 'district' or 'pincode'
+    const [selectedState, setSelectedState] = useState('Tamil Nadu');
+    const [selectedDistrict, setSelectedDistrict] = useState('Chennai');
     const [pincode, setPincode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -12,6 +27,7 @@ const WeatherModal = ({ onSuccess }) => {
         setIsOpen(true);
         setPincode('');
         setError('');
+        // Keep mode as is (default district)
     };
 
     const handleClose = () => {
@@ -38,9 +54,18 @@ const WeatherModal = ({ onSuccess }) => {
         }
     };
 
-    const handleSubmit = async () => {
+    const handleStateChange = (e) => {
+        const state = e.target.value;
+        setSelectedState(state);
+        setSelectedDistrict(STATES[state][0]);
+    };
 
-        if (pincode.length !== 6) {
+    const handleDistrictChange = (e) => {
+        setSelectedDistrict(e.target.value);
+    };
+
+    const handleSubmit = async () => {
+        if (mode === 'pincode' && pincode.length !== 6) {
             setError('Please enter a valid 6-digit pincode');
             return;
         }
@@ -49,12 +74,16 @@ const WeatherModal = ({ onSuccess }) => {
         setError('');
 
         try {
-            const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?zip=${pincode},IN&appid=${API_KEY}`);
+            const url = mode === 'pincode' 
+                ? `https://api.openweathermap.org/data/2.5/forecast?zip=${pincode},IN&appid=${API_KEY}`
+                : `https://api.openweathermap.org/data/2.5/forecast?q=${selectedDistrict},IN&appid=${API_KEY}`;
+            
+            const res = await fetch(url);
             const data = await res.json();
 
             if (!res.ok) {
                 if (data.cod === '404') {
-                    setError('Invalid Pincode: location not found');
+                    setError(mode === 'pincode' ? 'Invalid Pincode' : 'District not found');
                 } else if (data.cod === '401') {
                     setError('Invalid API Key. Please verify your OpenWeatherMap key.');
                 } else {
@@ -148,63 +177,140 @@ const WeatherModal = ({ onSuccess }) => {
                             <X size={48} />
                         </button>
 
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-white tracking-wide mt-2">Enter Pincode</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-white tracking-wide mt-2">
+                            {mode === 'district' ? 'Select Location' : 'Enter Pincode'}
+                        </h2>
 
                         <div className="w-full flex flex-col items-center">
-                            {/* Read-only Display Box */}
-                            <div
-                                className="w-full bg-black/50 border-4 border-white/30 rounded-2xl px-6 py-4 text-center text-5xl md:text-6xl font-mono text-white tracking-[0.25em] mb-4 min-h-[80px] flex items-center justify-center overflow-hidden"
-                            >
-                                {pincode || <span className="text-white/30 tracking-normal">------</span>}
+                            {mode === 'district' ? (
+                                /* District Mode Selection UI */
+                                <div className="w-full space-y-6 mb-8 mt-2">
+                                    <div className="space-y-2">
+                                        <label className="text-white/50 text-xl font-bold uppercase tracking-widest ml-1">Select State</label>
+                                        <div className="relative">
+                                            <select
+                                                value={selectedState}
+                                                onChange={handleStateChange}
+                                                className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                            >
+                                                {Object.keys(STATES).map(state => (
+                                                    <option key={state} value={state} className="bg-slate-900">{state}</option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+                                                ▼
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-white/50 text-xl font-bold uppercase tracking-widest ml-1">Select District</label>
+                                        <div className="relative">
+                                            <select
+                                                value={selectedDistrict}
+                                                onChange={handleDistrictChange}
+                                                className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-3xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                            >
+                                                {STATES[selectedState].map(district => (
+                                                    <option key={district} value={district} className="bg-slate-900">{district}</option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+                                                ▼
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Submit Button for District Mode */}
+                                    <button
+                                        onClick={handleSubmit}
+                                        disabled={loading}
+                                        className="w-full h-24 md:h-28 text-4xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-8"
+                                    >
+                                        {loading ? <Loader2 size={48} className="animate-spin" /> : 'FETCH WEATHER'}
+                                    </button>
+                                </div>
+                            ) : (
+                                /* Pincode Mode Selection UI */
+                                <>
+                                    {/* Read-only Display Box */}
+                                    <div
+                                        className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-5 text-center text-4xl font-mono text-white tracking-[0.25em] mb-6 min-h-[70px] flex items-center justify-center overflow-hidden"
+                                    >
+                                        {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
+                                    </div>
+
+                                    <div className="h-8 mb-4 w-full text-center">
+                                        {error && (
+                                            <p className="text-red-400 text-2xl font-medium animate-in fade-in">{error}</p>
+                                        )}
+                                    </div>
+
+                                    {/* On-Screen Numeric Keypad */}
+                                    <div className="grid grid-cols-3 gap-3 w-full max-w-md mx-auto mb-6">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                                            <button
+                                                key={num}
+                                                type="button"
+                                                disabled={loading}
+                                                onClick={() => handleNumpadClick(num.toString())}
+                                                className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all text-center flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                            >
+                                                {num}
+                                            </button>
+                                        ))}
+
+                                        {/* Bottom Row: Backspace, 0, Submit */}
+                                        <button
+                                            type="button"
+                                            disabled={loading || pincode.length === 0}
+                                            onClick={() => handleNumpadClick('backspace')}
+                                            className="h-16 md:h-20 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                        >
+                                            ⌫
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            disabled={loading}
+                                            onClick={() => handleNumpadClick('0')}
+                                            className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all text-center flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                        >
+                                            0
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            disabled={loading || pincode.length !== 6}
+                                            onClick={() => handleNumpadClick('submit')}
+                                            className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
+                                        >
+                                            {loading ? <Loader2 size={32} className="animate-spin" /> : '✔'}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Mode Selection Tab - BELOW SUBMIT */}
+                            <div className="w-full flex bg-black/40 rounded-2xl p-2 mb-8 border-2 border-white/5">
+                                <button
+                                    onClick={() => { setMode('district'); setError(''); }}
+                                    className={`flex-1 py-4 text-xl font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                >
+                                    District Mode
+                                </button>
+                                <button
+                                    onClick={() => { setMode('pincode'); setError(''); }}
+                                    className={`flex-1 py-4 text-xl font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                >
+                                    Pincode Mode
+                                </button>
                             </div>
 
-                            <div className="h-8 mb-4 w-full text-center">
-                                {error && (
+                            <div className="h-4 mb-2 min-h-[24px]">
+                                {mode === 'district' && error && (
                                     <p className="text-red-400 text-2xl font-medium animate-in fade-in">{error}</p>
                                 )}
-                            </div>
-
-                            {/* On-Screen Numeric Keypad */}
-                            <div className="grid grid-cols-3 gap-3 w-full max-w-md mx-auto mb-6">
-                                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                                    <button
-                                        key={num}
-                                        type="button"
-                                        disabled={loading}
-                                        onClick={() => handleNumpadClick(num.toString())}
-                                        className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all text-center flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
-                                    >
-                                        {num}
-                                    </button>
-                                ))}
-
-                                {/* Bottom Row: Backspace, 0, Submit */}
-                                <button
-                                    type="button"
-                                    disabled={loading || pincode.length === 0}
-                                    onClick={() => handleNumpadClick('backspace')}
-                                    className="h-16 md:h-20 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
-                                >
-                                    ⌫
-                                </button>
-
-                                <button
-                                    type="button"
-                                    disabled={loading}
-                                    onClick={() => handleNumpadClick('0')}
-                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all text-center flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
-                                >
-                                    0
-                                </button>
-
-                                <button
-                                    type="button"
-                                    disabled={loading || pincode.length !== 6}
-                                    onClick={() => handleNumpadClick('submit')}
-                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
-                                >
-                                    {loading ? <Loader2 size={32} className="animate-spin" /> : '✔'}
-                                </button>
                             </div>
 
                             {/* Bottom Actions */}
@@ -213,7 +319,7 @@ const WeatherModal = ({ onSuccess }) => {
                                     type="button"
                                     onClick={handleClose}
                                     disabled={loading}
-                                    className="flex-1 py-4 text-2xl font-bold rounded-2xl border-4 border-white/30 text-white hover:bg-white/10 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation"
+                                    className="flex-1 py-4 text-2xl font-bold rounded-2xl border-4 border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation"
                                 >
                                     Cancel
                                 </button>
