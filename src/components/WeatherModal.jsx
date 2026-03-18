@@ -167,7 +167,7 @@ const WeatherModal = ({ onSuccess }) => {
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
                     {/* Modal Content - TV Kiosk Look with Fixed Height */}
-                    <div className="bg-slate-900 border-4 border-white/20 rounded-3xl p-6 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col items-center max-w-xl w-full mx-4 relative h-[780px] md:h-[850px] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="bg-slate-900 border-4 border-white/20 rounded-3xl p-6 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col items-center max-w-xl w-full mx-4 relative h-[700px] md:h-[750px] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
                         <button
                             onClick={handleClose}
@@ -177,136 +177,133 @@ const WeatherModal = ({ onSuccess }) => {
                             <X size={48} />
                         </button>
 
-                        <div className="flex flex-col h-full w-full overflow-hidden">
+                        <div className="flex flex-col h-full w-full justify-between gap-2">
                             {/* Top Section: Header */}
-                            <div className="flex-none text-center pb-4">
-                                <h2 className="text-3xl md:text-4xl font-bold text-white tracking-wide">
+                            <div className="flex-none">
+                                <h2 className="text-3xl md:text-4xl font-bold text-white tracking-wide text-center mt-2">
                                     {mode === 'district' ? 'Select Location' : 'Enter Pincode'}
                                 </h2>
                             </div>
 
-                            {/* Middle Section: Main Content & Mode Tabs Clustered */}
-                            <div className="flex-grow flex flex-col justify-center items-center">
-                                <div className="w-full">
-                                    {mode === 'district' ? (
-                                        /* District Mode Selection UI */
-                                        <div className="flex flex-col gap-4 w-full">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-white/50 text-base font-bold uppercase tracking-widest ml-1">Select State</label>
-                                                <div className="relative">
-                                                    <select
-                                                        value={selectedState}
-                                                        onChange={handleStateChange}
-                                                        className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
-                                                    >
-                                                        {Object.keys(STATES).map(state => (
-                                                            <option key={state} value={state} className="bg-slate-900">{state}</option>
-                                                        ))}
-                                                    </select>
-                                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-white/50 text-base font-bold uppercase tracking-widest ml-1">Select District</label>
-                                                <div className="relative">
-                                                    <select
-                                                        value={selectedDistrict}
-                                                        onChange={handleDistrictChange}
-                                                        className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
-                                                    >
-                                                        {STATES[selectedState].map(district => (
-                                                            <option key={district} value={district} className="bg-slate-900">{district}</option>
-                                                        ))}
-                                                    </select>
-                                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
-                                                </div>
-                                            </div>
-
-                                            <button
-                                                onClick={handleSubmit}
-                                                disabled={loading}
-                                                className="w-full h-24 md:h-28 text-4xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-2"
-                                            >
-                                                {loading ? <Loader2 size={48} className="animate-spin" /> : 'FETCH WEATHER'}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        /* Pincode Mode Selection UI */
-                                        <div className="flex flex-col items-center w-full space-y-5">
-                                            <div className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-center text-4xl font-mono text-white tracking-[0.25em] min-h-[70px] flex items-center justify-center overflow-hidden">
-                                                {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
-                                            </div>
-
-                                            <div className="grid grid-cols-3 gap-3 w-full max-w-sm mx-auto">
-                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                                                    <button
-                                                        key={num}
-                                                        type="button"
-                                                        disabled={loading}
-                                                        onClick={() => handleNumpadClick(num.toString())}
-                                                        className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
-                                                    >
-                                                        {num}
-                                                    </button>
-                                                ))}
-                                                <button
-                                                    type="button"
-                                                    disabled={loading || pincode.length === 0}
-                                                    onClick={() => handleNumpadClick('backspace')}
-                                                    className="h-16 md:h-20 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                            {/* Middle Section: Search Content (Dynamic) */}
+                            <div className="flex-grow flex flex-col justify-center">
+                                {mode === 'district' ? (
+                                    /* District Mode Selection UI */
+                                    <div className="w-full space-y-4">
+                                        <div className="space-y-1">
+                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select State</label>
+                                            <div className="relative">
+                                                <select
+                                                    value={selectedState}
+                                                    onChange={handleStateChange}
+                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
                                                 >
-                                                    ⌫
-                                                </button>
+                                                    {Object.keys(STATES).map(state => (
+                                                        <option key={state} value={state} className="bg-slate-900">{state}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1">
+                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select District</label>
+                                            <div className="relative">
+                                                <select
+                                                    value={selectedDistrict}
+                                                    onChange={handleDistrictChange}
+                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                                >
+                                                    {STATES[selectedState].map(district => (
+                                                        <option key={district} value={district} className="bg-slate-900">{district}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            onClick={handleSubmit}
+                                            disabled={loading}
+                                            className="w-full h-20 md:h-24 text-3xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-2"
+                                        >
+                                            {loading ? <Loader2 size={40} className="animate-spin" /> : 'FETCH WEATHER'}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    /* Pincode Mode Selection UI */
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-3 text-center text-4xl font-mono text-white tracking-[0.25em] mb-3 min-h-[60px] flex items-center justify-center overflow-hidden">
+                                            {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
+                                        </div>
+
+                                        <div className="grid grid-cols-3 gap-2 w-full max-w-sm mx-auto">
+                                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                                                 <button
+                                                    key={num}
                                                     type="button"
                                                     disabled={loading}
-                                                    onClick={() => handleNumpadClick('0')}
-                                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                    onClick={() => handleNumpadClick(num.toString())}
+                                                    className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
                                                 >
-                                                    0
+                                                    {num}
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    disabled={loading || pincode.length !== 6}
-                                                    onClick={() => handleNumpadClick('submit')}
-                                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
-                                                >
-                                                    {loading ? <Loader2 size={32} className="animate-spin" /> : '✔'}
-                                                </button>
-                                            </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                disabled={loading || pincode.length === 0}
+                                                onClick={() => handleNumpadClick('backspace')}
+                                                className="h-14 md:h-16 text-2xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                            >
+                                                ⌫
+                                            </button>
+                                            <button
+                                                type="button"
+                                                disabled={loading}
+                                                onClick={() => handleNumpadClick('0')}
+                                                className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                            >
+                                                0
+                                            </button>
+                                            <button
+                                                type="button"
+                                                disabled={loading || pincode.length !== 6}
+                                                onClick={() => handleNumpadClick('submit')}
+                                                className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
+                                            >
+                                                {loading ? <Loader2 size={24} className="animate-spin" /> : '✔'}
+                                            </button>
                                         </div>
-                                    )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Bottom Section: Tabs and Error/Cancel */}
+                            <div className="flex-none space-y-3">
+                                <div className="h-6 flex items-center justify-center">
+                                    {error && <p className="text-red-400 text-xl font-medium animate-in fade-in">{error}</p>}
                                 </div>
 
-                                {/* Mode Selection Tab - Sticky to content above with small gap (8px) */}
-                                <div className="w-full flex bg-black/40 rounded-2xl p-2 border-2 border-white/5 mt-2">
+                                <div className="w-full flex bg-black/40 rounded-2xl p-2 border-2 border-white/5">
                                     <button
                                         onClick={() => { setMode('district'); setError(''); }}
-                                        className={`flex-1 py-4 text-xl font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
                                     >
                                         District Mode
                                     </button>
                                     <button
                                         onClick={() => { setMode('pincode'); setError(''); }}
-                                        className={`flex-1 py-4 text-xl font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
                                     >
                                         Pincode Mode
                                     </button>
-                                </div>
-                            </div>
-
-                            {/* Bottom Section: Error and Cancel sticky to bottom */}
-                            <div className="flex-none">
-                                <div className="h-10 flex items-center justify-center mb-1">
-                                    {error && <p className="text-red-400 text-2xl font-medium animate-in fade-in">{error}</p>}
                                 </div>
 
                                 <button
                                     type="button"
                                     onClick={handleClose}
                                     disabled={loading}
-                                    className="w-full py-4 text-2xl font-bold rounded-2xl border-4 border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation mb-2"
+                                    className="w-full py-3 text-xl font-bold rounded-2xl border-4 border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation mb-1"
                                 >
                                     Cancel
                                 </button>
