@@ -167,20 +167,20 @@ const WeatherModal = ({ onSuccess }) => {
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
                     {/* Modal Content - TV Kiosk Look with Fixed Height */}
-                    <div className="bg-slate-900 border-4 border-white/20 rounded-3xl p-6 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col items-center max-w-xl w-full mx-4 relative h-[700px] md:h-[750px] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="bg-slate-900 border-4 border-white/20 rounded-3xl p-5 md:p-6 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col items-center max-w-xl w-full mx-4 relative h-[620px] md:h-[650px] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
                         <button
                             onClick={handleClose}
                             disabled={loading}
-                            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors disabled:opacity-50 z-50"
+                            className="absolute top-5 right-5 text-white/50 hover:text-white transition-colors disabled:opacity-50 z-50"
                         >
-                            <X size={48} />
+                            <X size={44} />
                         </button>
 
-                        <div className="flex flex-col h-full w-full justify-between gap-2">
+                        <div className="flex flex-col h-full w-full justify-between gap-1">
                             {/* Top Section: Header */}
                             <div className="flex-none">
-                                <h2 className="text-3xl md:text-4xl font-bold text-white tracking-wide text-center mt-2">
+                                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-wide text-center mt-1">
                                     {mode === 'district' ? 'Select Location' : 'Enter Pincode'}
                                 </h2>
                             </div>
@@ -189,52 +189,52 @@ const WeatherModal = ({ onSuccess }) => {
                             <div className="flex-grow flex flex-col justify-center">
                                 {mode === 'district' ? (
                                     /* District Mode Selection UI */
-                                    <div className="w-full space-y-4">
+                                    <div className="w-full space-y-3">
                                         <div className="space-y-1">
-                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select State</label>
+                                            <label className="text-white/40 text-xs font-bold uppercase tracking-widest ml-1">Select State</label>
                                             <div className="relative">
                                                 <select
                                                     value={selectedState}
                                                     onChange={handleStateChange}
-                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                                    className="w-full bg-black/50 border-2 border-white/10 rounded-xl px-4 py-3 text-xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
                                                 >
                                                     {Object.keys(STATES).map(state => (
                                                         <option key={state} value={state} className="bg-slate-900">{state}</option>
                                                     ))}
                                                 </select>
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
+                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 text-xs">▼</div>
                                             </div>
                                         </div>
 
                                         <div className="space-y-1">
-                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select District</label>
+                                            <label className="text-white/40 text-xs font-bold uppercase tracking-widest ml-1">Select District</label>
                                             <div className="relative">
                                                 <select
                                                     value={selectedDistrict}
                                                     onChange={handleDistrictChange}
-                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
+                                                    className="w-full bg-black/50 border-2 border-white/10 rounded-xl px-4 py-3 text-xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
                                                 >
                                                     {STATES[selectedState].map(district => (
                                                         <option key={district} value={district} className="bg-slate-900">{district}</option>
                                                     ))}
                                                 </select>
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
+                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 text-xs">▼</div>
                                             </div>
                                         </div>
 
                                         <button
                                             onClick={handleSubmit}
                                             disabled={loading}
-                                            className="w-full h-20 md:h-24 text-3xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-2"
+                                            className="w-full h-16 md:h-20 text-2xl font-bold rounded-xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_8px_20px_rgba(220,38,38,0.2)] disabled:opacity-50 mt-1"
                                         >
-                                            {loading ? <Loader2 size={40} className="animate-spin" /> : 'FETCH WEATHER'}
+                                            {loading ? <Loader2 size={32} className="animate-spin" /> : 'FETCH WEATHER'}
                                         </button>
                                     </div>
                                 ) : (
                                     /* Pincode Mode Selection UI */
                                     <div className="flex flex-col items-center">
-                                        <div className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-3 text-center text-4xl font-mono text-white tracking-[0.25em] mb-3 min-h-[60px] flex items-center justify-center overflow-hidden">
-                                            {pincode || <span className="text-white/30 tracking-normal text-3xl">------</span>}
+                                        <div className="w-full bg-black/50 border-2 border-white/10 rounded-xl px-4 py-2 text-center text-3xl font-mono text-white tracking-[0.2em] mb-2 min-h-[50px] flex items-center justify-center overflow-hidden">
+                                            {pincode || <span className="text-white/20 tracking-normal text-2xl">------</span>}
                                         </div>
 
                                         <div className="grid grid-cols-3 gap-2 w-full max-w-sm mx-auto">
@@ -244,7 +244,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                     type="button"
                                                     disabled={loading}
                                                     onClick={() => handleNumpadClick(num.toString())}
-                                                    className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                    className="h-12 md:h-14 text-2xl font-bold rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center shadow-md disabled:opacity-50"
                                                 >
                                                     {num}
                                                 </button>
@@ -253,7 +253,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading || pincode.length === 0}
                                                 onClick={() => handleNumpadClick('backspace')}
-                                                className="h-14 md:h-16 text-2xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                className="h-12 md:h-14 text-xl font-bold rounded-xl bg-white/5 border border-white/10 text-red-400 hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center shadow-md disabled:opacity-50"
                                             >
                                                 ⌫
                                             </button>
@@ -261,7 +261,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading}
                                                 onClick={() => handleNumpadClick('0')}
-                                                className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                className="h-12 md:h-14 text-2xl font-bold rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center shadow-md disabled:opacity-50"
                                             >
                                                 0
                                             </button>
@@ -269,9 +269,9 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading || pincode.length !== 6}
                                                 onClick={() => handleNumpadClick('submit')}
-                                                className="h-14 md:h-16 text-3xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
+                                                className="h-12 md:h-14 text-2xl font-bold rounded-xl bg-red-600 border border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-md shadow-red-600/20 disabled:opacity-50 disabled:bg-red-900/40"
                                             >
-                                                {loading ? <Loader2 size={24} className="animate-spin" /> : '✔'}
+                                                {loading ? <Loader2 size={20} className="animate-spin" /> : '✔'}
                                             </button>
                                         </div>
                                     </div>
@@ -279,21 +279,21 @@ const WeatherModal = ({ onSuccess }) => {
                             </div>
 
                             {/* Bottom Section: Tabs and Error/Cancel */}
-                            <div className="flex-none space-y-3">
-                                <div className="h-6 flex items-center justify-center">
-                                    {error && <p className="text-red-400 text-xl font-medium animate-in fade-in">{error}</p>}
+                            <div className="flex-none space-y-2 mt-auto">
+                                <div className="h-5 flex items-center justify-center">
+                                    {error && <p className="text-red-400 text-base font-medium animate-in fade-in">{error}</p>}
                                 </div>
 
-                                <div className="w-full flex bg-black/40 rounded-2xl p-2 border-2 border-white/5">
+                                <div className="w-full flex bg-black/40 rounded-xl p-1 border border-white/10">
                                     <button
                                         onClick={() => { setMode('district'); setError(''); }}
-                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-2 text-base font-bold rounded-lg transition-all ${mode === 'district' ? 'bg-white/10 text-white shadow-lg border border-white/10' : 'text-white/30 hover:text-white/50'}`}
                                     >
                                         District Mode
                                     </button>
                                     <button
                                         onClick={() => { setMode('pincode'); setError(''); }}
-                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-2 text-base font-bold rounded-lg transition-all ${mode === 'pincode' ? 'bg-white/10 text-white shadow-lg border border-white/10' : 'text-white/30 hover:text-white/50'}`}
                                     >
                                         Pincode Mode
                                     </button>
@@ -303,7 +303,7 @@ const WeatherModal = ({ onSuccess }) => {
                                     type="button"
                                     onClick={handleClose}
                                     disabled={loading}
-                                    className="w-full py-3 text-xl font-bold rounded-2xl border-4 border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation mb-1"
+                                    className="w-full py-2.5 text-lg font-bold rounded-xl border-2 border-white/5 text-white/30 hover:text-white/50 hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 mb-1"
                                 >
                                     Cancel
                                 </button>
