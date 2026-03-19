@@ -15,7 +15,7 @@ const Header = ({ children }) => {
                     </div>
 
                     {/* Text Container: Stacks Title and Subtitle vertically next to Logo */}
-                    <div className="flex flex-col justify-center h-full text-white">
+                    <div className="flex flex-col justify-center items-start h-full text-white">
                         {/* Title Split Row */}
                         <div className="flex items-center gap-3 md:gap-4 leading-none whitespace-nowrap mb-2">
                             <h1 className="text-4xl md:text-[3.5rem] font-extrabold tracking-tight pb-[2px]">Kondaas</h1>
@@ -24,7 +24,7 @@ const Header = ({ children }) => {
                         </div>
                         
                         {/* Subtitle */}
-                        <p className="text-base md:text-xl font-bold tracking-wide leading-none text-white/90">
+                        <p className="text-base md:text-xl font-bold tracking-wide leading-none text-white/90 text-left">
                             Best Solar Installer Across South India
                         </p>
                     </div>
