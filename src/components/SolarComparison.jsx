@@ -114,7 +114,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <ShieldCheck className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-left">
                                 <span className="block font-bold md:text-lg leading-tight">25+ Year</span>
                                 <span className="block text-sm md:text-base leading-tight">Performance Warranty</span>
                             </div>
@@ -125,29 +125,29 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <Shield className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-left">
                                 <span className="block font-bold md:text-lg leading-tight">Anti-PID</span>
                                 <span className="block text-sm md:text-base leading-tight">Technology</span>
                             </div>
                         </div>
 
                         {/* Top Right Feature */}
-                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-left">
+                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <Moon className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
                                 <span className="block font-bold md:text-lg leading-tight">Better Low Light</span>
                                 <span className="block text-sm md:text-base leading-tight">Performance</span>
                             </div>
                         </div>
 
                         {/* Mid Right Feature */}
-                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-left">
+                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <TrendingUp className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
                                 <span className="block font-bold md:text-lg leading-tight">High</span>
                                 <span className="block text-sm md:text-base leading-tight">Energy Yield</span>
                             </div>
@@ -191,7 +191,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <ShieldAlert className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-left">
                                 <span className="block font-bold md:text-lg leading-tight text-red-100">Lower Warranty</span>
                             </div>
                         </div>
@@ -201,29 +201,29 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <CloudRain className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-left">
                                 <span className="block font-bold md:text-lg leading-tight text-red-100">Poor Low Light</span>
                                 <span className="block text-sm md:text-base leading-tight text-red-100">Performance</span>
                             </div>
                         </div>
 
                         {/* Top Right Feature (Mirrored) */}
-                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-left">
+                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <TrendingDown className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
                                 <span className="block font-bold md:text-lg leading-tight text-red-100">Higher</span>
                                 <span className="block text-sm md:text-base leading-tight text-red-100">Degradation</span>
                             </div>
                         </div>
 
                         {/* Mid Right Feature (Mirrored) */}
-                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-left">
+                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <Activity className="w-6 h-6 text-white" />
                             </div>
-                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                            <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
                                 <span className="block font-bold md:text-lg leading-tight text-red-100">No Anti-PID</span>
                                 <span className="block text-sm md:text-base leading-tight text-red-100">Protection</span>
                             </div>
