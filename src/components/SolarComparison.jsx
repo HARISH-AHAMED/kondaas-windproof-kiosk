@@ -110,7 +110,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                     {/* Kondaas Marketing Features Overlay */}
                     <div className="absolute inset-0 pointer-events-none z-20">
                         {/* Top Left Feature */}
-                        <div className="absolute top-[18%] left-[4%] flex items-center gap-3">
+                        <div className="absolute top-[18%] left-[4%] flex items-center gap-2">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <ShieldCheck className="w-6 h-6 text-white" />
                             </div>
@@ -121,7 +121,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Mid Left Feature */}
-                        <div className="absolute top-[32%] left-[4%] flex items-center gap-3">
+                        <div className="absolute top-[32%] left-[4%] flex items-center gap-2">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <Shield className="w-6 h-6 text-white" />
                             </div>
@@ -132,7 +132,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Top Right Feature */}
-                        <div className="absolute top-[18%] right-[4%] flex items-center gap-3 flex-row-reverse text-right">
+                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <Moon className="w-6 h-6 text-white" />
                             </div>
@@ -143,7 +143,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Mid Right Feature */}
-                        <div className="absolute top-[32%] right-[4%] flex items-center gap-3 flex-row-reverse text-right">
+                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#003366] border-2 border-[#4da6ff] flex items-center justify-center shadow-[0_0_15px_rgba(77,166,255,0.6)]">
                                 <TrendingUp className="w-6 h-6 text-white" />
                             </div>
@@ -187,7 +187,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                     {/* Other Marketing Features Overlay */}
                     <div className={`absolute inset-0 pointer-events-none z-20 transition-opacity duration-500 ${isBlownAway ? 'opacity-0' : 'opacity-100'}`}>
                         {/* Top Left Feature */}
-                        <div className="absolute top-[18%] left-[4%] flex items-center gap-3">
+                        <div className="absolute top-[18%] left-[4%] flex items-center gap-2">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <ShieldAlert className="w-6 h-6 text-white" />
                             </div>
@@ -197,7 +197,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Mid Left Feature */}
-                        <div className="absolute top-[32%] left-[4%] flex items-center gap-3">
+                        <div className="absolute top-[32%] left-[4%] flex items-center gap-2">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <CloudRain className="w-6 h-6 text-white" />
                             </div>
@@ -208,7 +208,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Top Right Feature (Mirrored) */}
-                        <div className="absolute top-[18%] right-[4%] flex items-center gap-3 flex-row-reverse text-right">
+                        <div className="absolute top-[18%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <TrendingDown className="w-6 h-6 text-white" />
                             </div>
@@ -219,7 +219,7 @@ const SolarComparison = ({ windSpeed = 0 }) => {
                         </div>
 
                         {/* Mid Right Feature (Mirrored) */}
-                        <div className="absolute top-[32%] right-[4%] flex items-center gap-3 flex-row-reverse text-right">
+                        <div className="absolute top-[32%] right-[4%] flex items-center gap-2 flex-row-reverse text-right">
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#660000] border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.6)]">
                                 <Activity className="w-6 h-6 text-white" />
                             </div>
