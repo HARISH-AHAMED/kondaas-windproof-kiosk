@@ -145,6 +145,49 @@ const WeatherModal = ({ onSuccess }) => {
         }
     };
 
+    const CustomDropdown = ({ label, value, options, onChange, disabled }) => {
+        const [showDropdown, setShowDropdown] = useState(false);
+
+        return (
+            <div className="relative w-full space-y-1">
+                <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">{label}</label>
+                <button
+                    type="button"
+                    disabled={disabled || loading}
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white flex items-center justify-between hover:border-red-500 active:scale-[0.99] outline-none transition-all disabled:opacity-50"
+                >
+                    <span className="truncate mr-2">{value}</span>
+                    <span className={`text-white/30 text-xl transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`}>▼</span>
+                </button>
+
+                {showDropdown && (
+                    <>
+                        <div 
+                            className="fixed inset-0 z-[110]" 
+                            onClick={() => setShowDropdown(false)}
+                        ></div>
+                        <div className="absolute top-[calc(100%+8px)] left-0 w-full bg-slate-800 border-4 border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[120] max-h-[250px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200 custom-scrollbar">
+                            {options.map(opt => (
+                                <button
+                                    key={opt}
+                                    type="button"
+                                    onClick={() => { 
+                                        onChange({ target: { value: opt } }); 
+                                        setShowDropdown(false); 
+                                    }}
+                                    className={`w-full px-6 py-4 text-xl text-left hover:bg-white/10 active:bg-white/20 transition-colors border-b border-white/5 last:border-0 ${value === opt ? 'bg-red-600/30 text-white font-bold' : 'text-white/80'}`}
+                                >
+                                    {opt}
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </div>
+        );
+    };
+
     return (
         <>
             {/* Trigger Button - Migrated to Header Style */}
@@ -190,37 +233,19 @@ const WeatherModal = ({ onSuccess }) => {
                                 {mode === 'district' ? (
                                     /* District Mode Selection UI */
                                     <div className="w-full space-y-4">
-                                        <div className="space-y-1">
-                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select State</label>
-                                            <div className="relative">
-                                                <select
-                                                    value={selectedState}
-                                                    onChange={handleStateChange}
-                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
-                                                >
-                                                    {Object.keys(STATES).map(state => (
-                                                        <option key={state} value={state} className="bg-slate-900">{state}</option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
-                                            </div>
-                                        </div>
+                                        <CustomDropdown 
+                                            label="Select State"
+                                            value={selectedState}
+                                            options={Object.keys(STATES)}
+                                            onChange={handleStateChange}
+                                        />
 
-                                        <div className="space-y-1">
-                                            <label className="text-white/50 text-sm font-bold uppercase tracking-widest ml-1">Select District</label>
-                                            <div className="relative">
-                                                <select
-                                                    value={selectedDistrict}
-                                                    onChange={handleDistrictChange}
-                                                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white appearance-none cursor-pointer focus:border-red-500 outline-none transition-all"
-                                                >
-                                                    {STATES[selectedState].map(district => (
-                                                        <option key={district} value={district} className="bg-slate-900">{district}</option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">▼</div>
-                                            </div>
-                                        </div>
+                                        <CustomDropdown 
+                                            label="Select District"
+                                            value={selectedDistrict}
+                                            options={STATES[selectedState]}
+                                            onChange={handleDistrictChange}
+                                        />
 
                                         <button
                                             onClick={handleSubmit}
