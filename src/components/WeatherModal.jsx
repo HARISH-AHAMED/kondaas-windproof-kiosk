@@ -3,13 +3,13 @@ import { CloudRain, X, Loader2 } from 'lucide-react';
 
 const STATES = {
     'Tamil Nadu': [
-        'Chennai', 'Coimbatore', 'Madurai', 'Trichy', 'Salem', 'Tirunelveli', 'Vellore', 'Erode',
+        'Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Tirunelveli', 'Vellore', 'Erode',
         'Thoothukudi', 'Tiruppur', 'Kanchipuram', 'Nagercoil', 'Thanjavur', 'Dindigul',
-        'Vellore', 'Cuddalore', 'Kumbakonam', 'Nagapattinam', 'Pudukkottai', 'Hosur'
+        'Cuddalore', 'Kumbakonam', 'Nagapattinam', 'Pudukkottai', 'Hosur'
     ],
     'Kerala': [
         'Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Malappuram', 'Palakkad',
-        'Alappuzha', 'Kollam', 'Kannur', 'Kasaragod', 'Idukki', 'Kottayam', 'Pathanamthitta', 'Wayanad'
+        'Alappuzha', 'Kollam', 'Kannur', 'Kasaragod', 'Munnar', 'Kottayam', 'Pathanamthitta', 'Kalpetta'
     ]
 };
 
