@@ -155,7 +155,7 @@ const WeatherModal = ({ onSuccess }) => {
                     type="button"
                     disabled={disabled || loading}
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white flex items-center justify-between hover:border-red-500 active:scale-[0.99] outline-none transition-all disabled:opacity-50"
+                    className="w-full bg-black/50 border-4 border-white/20 rounded-2xl px-6 py-4 text-2xl font-bold text-white flex items-center justify-between active:scale-[0.99] outline-none transition-all disabled:opacity-50"
                 >
                     <span className="truncate mr-2">{value}</span>
                     <span className={`text-white/30 text-xl transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`}>▼</span>
@@ -176,7 +176,7 @@ const WeatherModal = ({ onSuccess }) => {
                                         onChange({ target: { value: opt } }); 
                                         setShowDropdown(false); 
                                     }}
-                                    className={`w-full px-6 py-4 text-xl text-left hover:bg-white/10 active:bg-white/20 transition-colors border-b border-white/5 last:border-0 ${value === opt ? 'bg-red-600/30 text-white font-bold' : 'text-white/80'}`}
+                                    className={`w-full px-6 py-4 text-xl text-left active:bg-white/20 transition-colors border-b border-white/5 last:border-0 ${value === opt ? 'bg-red-600/30 text-white font-bold' : 'text-white/80'}`}
                                 >
                                     {opt}
                                 </button>
@@ -194,13 +194,13 @@ const WeatherModal = ({ onSuccess }) => {
             <div className="pointer-events-auto relative">
                 <button
                     onClick={handleOpen}
-                    className="w-12 h-12 md:w-14 md:h-14 rounded border-2 border-white/20 flex items-center justify-center text-white bg-white/10 hover:bg-white/20 transition-all duration-300 group relative active:scale-95 touch-manipulation shadow-sm"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded border-2 border-white/20 flex items-center justify-center text-white bg-white/10 transition-all duration-300 group relative active:scale-95 touch-manipulation shadow-sm"
                 >
                     <div className="scale-110">
                         <CloudRain size={24} />
                     </div>
                     {/* Tooltip */}
-                    <span className="absolute right-full mr-4 px-4 py-2 bg-black/80 text-lg md:text-2xl rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    <span className="absolute right-full mr-4 px-4 py-2 bg-black/80 text-lg md:text-2xl rounded opacity-0 transition-opacity whitespace-nowrap pointer-events-none">
                         Weather Config
                     </span>
                 </button>
@@ -215,7 +215,7 @@ const WeatherModal = ({ onSuccess }) => {
                         <button
                             onClick={handleClose}
                             disabled={loading}
-                            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors disabled:opacity-50 z-50"
+                            className="absolute top-6 right-6 text-white/50 transition-colors disabled:opacity-50 z-50"
                         >
                             <X size={48} />
                         </button>
@@ -250,7 +250,7 @@ const WeatherModal = ({ onSuccess }) => {
                                         <button
                                             onClick={handleSubmit}
                                             disabled={loading}
-                                            className="w-full h-20 md:h-24 text-3xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white hover:bg-red-500 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-2"
+                                            className="w-full h-20 md:h-24 text-3xl font-bold rounded-2xl bg-red-600 border-4 border-red-500 text-white active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_10px_30px_rgba(220,38,38,0.3)] disabled:opacity-50 mt-2"
                                         >
                                             {loading ? <Loader2 size={40} className="animate-spin" /> : 'FETCH WEATHER'}
                                         </button>
@@ -269,7 +269,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                     type="button"
                                                     disabled={loading}
                                                     onClick={() => handleNumpadClick(num.toString())}
-                                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                    className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
                                                 >
                                                     {num}
                                                 </button>
@@ -278,7 +278,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading || pincode.length === 0}
                                                 onClick={() => handleNumpadClick('backspace')}
-                                                className="h-16 md:h-20 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                className="h-16 md:h-20 text-3xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-red-400 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
                                             >
                                                 ⌫
                                             </button>
@@ -286,7 +286,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading}
                                                 onClick={() => handleNumpadClick('0')}
-                                                className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
+                                                className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-white/10 border-2 border-white/20 text-white active:scale-95 transition-all flex items-center justify-center shadow-lg disabled:opacity-50 select-none touch-manipulation"
                                             >
                                                 0
                                             </button>
@@ -294,7 +294,7 @@ const WeatherModal = ({ onSuccess }) => {
                                                 type="button"
                                                 disabled={loading || pincode.length !== 6}
                                                 onClick={() => handleNumpadClick('submit')}
-                                                className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white hover:bg-red-500 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
+                                                className="h-16 md:h-20 text-4xl font-bold rounded-2xl bg-red-600 border-2 border-red-500 text-white active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-red-600/30 disabled:opacity-50 disabled:bg-red-900/50 disabled:border-red-900/50 select-none touch-manipulation"
                                             >
                                                 {loading ? <Loader2 size={32} className="animate-spin" /> : '✔'}
                                             </button>
@@ -312,13 +312,13 @@ const WeatherModal = ({ onSuccess }) => {
                                 <div className="w-full flex bg-black/40 rounded-2xl p-2 border-2 border-white/5">
                                     <button
                                         onClick={() => { setMode('district'); setError(''); }}
-                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'district' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40'}`}
                                     >
                                         District Mode
                                     </button>
                                     <button
                                         onClick={() => { setMode('pincode'); setError(''); }}
-                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40 hover:text-white/60'}`}
+                                        className={`flex-1 py-3 text-lg font-bold rounded-xl transition-all ${mode === 'pincode' ? 'bg-white/20 text-white shadow-xl' : 'text-white/40'}`}
                                     >
                                         Pincode Mode
                                     </button>
@@ -328,7 +328,7 @@ const WeatherModal = ({ onSuccess }) => {
                                     type="button"
                                     onClick={handleClose}
                                     disabled={loading}
-                                    className="w-full py-3 text-xl font-bold rounded-2xl border-4 border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation mb-1"
+                                    className="w-full py-3 text-xl font-bold rounded-2xl border-4 border-white/10 text-white/50 active:scale-95 touch-manipulation mb-1 transition-all disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
